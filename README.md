@@ -31,7 +31,7 @@ We depend on:
 - gtest
 - glog
 - gflags (to run experiments)
-- CUDA 10.2 - 11.5 (others might work but are untested)
+- CUDA 10.2 - 11.5 (others might work but are untested) 10.0 cannot run it
 - Eigen (no need to explicitly install, a recent version is built into the library)
 - SQLite 3 (for serialization)
 Please run
@@ -92,7 +92,7 @@ We use the GPU during build, not only at run time. In the default configuration 
         "nvidia": {
             "path": "/usr/bin/nvidia-container-runtime",
             "runtimeArgs": []
-         } 
+            } 
     },
     "default-runtime": "nvidia" 
 }
@@ -109,24 +109,47 @@ Now let's build the Dockerfile.build. This image layers on the last, and actuall
 ```
 docker build -t nvblox -f Dockerfile.build .
 ```
+
+---
+
+### Option 1 download dataset outside the container:
+You can download the dataset outside the container, in your desktop and then `-v` to the docker
+```bash
+apt-get update
+apt-get install unzip
+wget http://vision.princeton.edu/projects/2016/3DMatch/downloads/rgbd-datasets/sun3d-mit_76_studyroom-76-1studyroom2.zip -P ~/bags/3dmatch
+unzip ~/bags/3dmatch/sun3d-mit_76_studyroom-76-1studyroom2.zip -d ~/bags/3dmatch
+```
+
+```bash
+docker run -it --net=host --env="DISPLAY" -v $HOME/.Xauthority:/root/.Xauthority:rw -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v $HOME/bags/3dmatch:/root/datasets/3dmatch --name kin_nvblox nvblox
+
+./fuse_3dmatch ~/datasets/3dmatch/ --esdf_frame_subsampling 3000 --mesh_output_path mesh.ply
+```
+
+---
+
+### Option 2 download dataset inside the container:
+
 Now let's run the 3DMatch example inside the docker. Note there's some additional complexity in the `docker run` command such that we can forward X11 to the host (we're going to be view a reconstruction in a GUI). Run the container using:
 ```
 xhost local:docker
 docker run -it --net=host --env="DISPLAY" -v $HOME/.Xauthority:/root/.Xauthority:rw -v /tmp/.X11-unix:/tmp/.X11-unix:rw nvblox
 ```
+
 Let's download a dataset and run the example (this is largely a repeat of "Run an example" above).
 ```
-apt-get update
-apt-get install unzip
-wget http://vision.princeton.edu/projects/2016/3DMatch/downloads/rgbd-datasets/sun3d-mit_76_studyroom-76-1studyroom2.zip -P ~/datasets/3dmatch
-unzip ~/datasets/3dmatch/sun3d-mit_76_studyroom-76-1studyroom2.zip -d ~/datasets/3dmatch
-cd nvblox/nvblox/build/experiments/
-./fuse_3dmatch ~/datasets/3dmatch/sun3d-mit_76_studyroom-76-1studyroom2/ --esdf_frame_subsampling 3000 --mesh_output_path mesh.ply
+cd nvblox/nvblox/build/executables
+./fuse_3dmatch ~/datasets/3dmatch/ --esdf_frame_subsampling 3000 --mesh_output_path mesh.ply
 ```
+
+---
+
+
 Now let's visualize. From the same experiments folder run:
 ```
-apt-get install python3-pip libgl1-mesa-glx
-pip3 install open3d
+apt-get install python3-pip libgl1-mesa-glx -y
+pip3 install open3d https://pypi.tuna.tsinghua.edu.cn/simple
 python3 ../../visualization/visualize_mesh.py mesh.ply
 ```
 

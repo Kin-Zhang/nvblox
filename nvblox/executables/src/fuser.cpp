@@ -23,6 +23,7 @@ limitations under the License.
 #include "nvblox/io/ply_writer.h"
 #include "nvblox/io/pointcloud_io.h"
 #include "nvblox/utils/timing.h"
+#include "timer.h"
 
 // Layer params
 DEFINE_double(voxel_size, 0.0f, "Voxel resolution in meters.");
@@ -351,12 +352,14 @@ bool Fuser::integrateFrame(const int frame_number) {
 
 bool Fuser::integrateFrames() {
   int frame_number = 0;
+  TIC;
   while (frame_number < num_frames_to_integrate_ &&
          integrateFrame(frame_number++)) {
     timing::mark("Frame " + std::to_string(frame_number - 1), Color::Red());
-    LOG(INFO) << "Integrating frame " << frame_number - 1;
+    // LOG(INFO) << "Integrating frame " << frame_number - 1;
   }
   LOG(INFO) << "Ran out of data at frame: " << frame_number - 1;
+  TOC("The whole Integrate process", true);
   return true;
 }
 
