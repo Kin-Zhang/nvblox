@@ -14,7 +14,7 @@ set(CMAKE_BUILD_TYPE RelWithDebInfo)
 SET(nvblox_link_options "-Wl,--disable-new-dtags")
 
 # Build options
-option(BUILD_EXPERIMENTS "Build performance experimentation binaries" OFF)
+option(BUILD_EXPERIMENTS "Build performance experimentation binaries" ON)
  
 # GPU architectures
 # By default this flag is NOT set. Cmake then detects the architecture of the build computer
@@ -188,9 +188,7 @@ endif()
 ###############
 # EXPERIMENTS #
 ###############
-if(BUILD_EXPERIMENTS)
-    add_subdirectory(experiments)
-endif()
+add_subdirectory(experiments)
 
 #############################
 # INTERFACE LIBRARY FOR ROS #
