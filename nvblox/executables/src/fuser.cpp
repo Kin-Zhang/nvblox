@@ -91,7 +91,7 @@ Fuser::Fuser(std::unique_ptr<datasets::RgbdDataLoaderInterface>&& data_loader)
               << FLAGS_voxel_size;
     setVoxelSize(static_cast<float>(FLAGS_voxel_size));
   }
-
+  LOG(INFO) << "Voxel size: " << voxel_size_m_;
   // Initialize the mapper
   mapper_ = std::make_unique<RgbdMapper>(voxel_size_m_);
 

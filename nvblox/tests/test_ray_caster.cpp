@@ -34,7 +34,7 @@ class RayCasterTest : public ::testing::Test {
 
 TEST_F(RayCasterTest, StraightAheadCast) {
   Vector3f start(0.0f, 0.0f, 0.0f);
-  Vector3f end(5.0f, 0.0f, 0.0f);
+  Vector3f end(5.0f, 5.0f, 0.0f);
   RayCaster raycaster(start, end);
 
   std::vector<Index3D> all_indices;
@@ -47,7 +47,11 @@ TEST_F(RayCasterTest, StraightAheadCast) {
   RayCaster scaled_raycaster(scale * start, scale * end, scale);
   std::vector<Index3D> all_scaled_indices;
   scaled_raycaster.getAllIndices(&all_scaled_indices);
-
+  for(auto item: all_indices){
+    std::cout << item <<std::endl;
+    std::cout << "-------------- "<<std::endl;
+  }
+  
   ASSERT_EQ(all_indices.size(), all_scaled_indices.size());
 
   // Finally, negative.

@@ -129,6 +129,10 @@ add_executable(test_traits test_traits.cpp)
 target_link_libraries(test_traits nvblox_test_utils)
 gtest_discover_tests(test_traits ${TEST_OPTIONS})
 
+add_executable(test_ray_caster test_ray_caster.cpp)
+target_link_libraries(test_ray_caster nvblox_test_utils)
+gtest_discover_tests(test_ray_caster ${TEST_OPTIONS})
+
 add_executable(test_serialization test_serialization.cpp)
 target_link_libraries(test_serialization nvblox_test_utils)
 gtest_discover_tests(test_serialization ${TEST_OPTIONS})
