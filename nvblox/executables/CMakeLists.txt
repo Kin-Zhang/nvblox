@@ -23,6 +23,25 @@ target_link_libraries(fuse_3dmatch
 )
 set_target_properties(fuse_3dmatch PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
+# LiDAR executable
+find_package(PCL REQUIRED)
+add_library(pointcloud SHARED
+    src/datasets/pointclouds.cpp
+)
+target_include_directories(pointcloud PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+# issue met here and solved: https://stackoverflow.com/a/52137618/9281669
+target_link_libraries(pointcloud nvblox_lib ${PCL_LIBRARIES} stdc++fs)
+add_executable(fuse_lidar
+    src/fuse_lidar.cpp
+)
+target_link_libraries(fuse_lidar
+    nvblox_lib pointcloud ${PCL_LIBRARIES}
+)
+set_target_properties(fuse_lidar PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
 # Replica executable
 add_executable(fuse_replica
     src/fuse_replica.cpp

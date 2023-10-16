@@ -1,3 +1,22 @@
+nvblox
+---
+
+Benchmark adaptation, adding the point cloud integrator. Steps:
+1. read point cloud from file, `pcd` folder. Check [DynamicMap_Benchmark](https://github.com/KTH-RPL/DynamicMap_Benchmark)
+2. set LiDAR params etc to `config.yaml`
+3. transfer point cloud to depth image which is nvblox needed to fuse.
+
+## Build
+```bash
+cd nvblox/nvblox
+mkdir build && cd build
+cmake .. && make
+```
+
+---
+<details>
+  <summary>[Please check the official repo or below origin read for more detail]</summary>
+
 # nvblox
 Signed Distance Functions (SDFs) on NVIDIA GPUs.
 
@@ -181,3 +200,5 @@ export OPENBLAS_CORETYPE=ARMV8
 
 # License
 This code is under an [open-source license](LICENSE) (Apache 2.0). :)
+
+</details>
